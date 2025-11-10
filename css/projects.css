@@ -1,0 +1,83 @@
+@import url(http://fonts.googleapis.com/css?family=Poppins);
+#sidebar{
+    background-color: #f8f9fb;
+    width: 250px;
+    font-family: 'Poppins';
+}
+#sidebar h1{
+    color: #5B3FFF;
+  padding: 10px 20px 0px 20px;
+
+}
+
+#sidebar ul {
+    list-style: none;
+    padding:0;
+}
+
+#sidebar ul li {
+padding: 10px 20px; 
+}
+
+#sidebar ul li a {
+    text-decoration: none;
+    color: #555;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+#sidebar ul li.active a {
+    background-color: #e7e8ff; 
+    color: #4f46e5; 
+    font-weight: 600;
+}
+
+#sidebar ul li a:hover {
+    background-color: #f3f4ff; 
+    color: #4f46e5;
+    border-radius: 8px;
+}
+
+.user {
+    background-color: #d9dae6; 
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+    padding: 12px 20px;
+    border-radius: 8px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #333333;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    margin: 0;
+}
+
+.user-role {
+    font-size: 14px;
+    color: #888888; 
+    margin: 0;
+}
