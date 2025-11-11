@@ -3,6 +3,8 @@
     background-color: #f8f9fb;
     width: 250px;
     font-family: 'Poppins';
+    height: 100vh;
+    position: fixed;
 }
 #sidebar h1{
     color: #5B3FFF;
@@ -80,4 +82,34 @@ padding: 10px 20px;
     font-size: 14px;
     color: #888888; 
     margin: 0;
+}
+
+#glavnisadrzaj {
+    margin-left: 250px;
+    padding: 20px;
+    font-family: 'Poppins';
+}
+
+.grid{
+    display: grid;
+    gap:10px;
+    grid-template-columns: 1fr 1fr;
+}
+
+.kartica {
+    background-color: white;
+    border-radius: 12px;
+    padding: 20px;
+    min-height: 130px;
+    border: 1px solid #e6e6e6;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.actions {
+    display: flex;
+    gap: 10px;
 }
