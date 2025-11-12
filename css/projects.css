@@ -44,6 +44,21 @@ padding: 10px 20px;
     border-radius: 8px;
 }
 
+#sidebar ul li a svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    stroke: #4f46e5; 
+}
+#sidebar ul li.active a svg {
+    stroke: #4f46e5;
+}
+
+#sidebar ul li a:hover svg {
+    stroke: #4f46e5; 
+}
+
+
 .user {
     background-color: #d9dae6; 
     display: flex;
@@ -102,14 +117,111 @@ padding: 10px 20px;
     padding: 20px;
     min-height: 130px;
     border: 1px solid #e6e6e6;
+    transition: box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
 
 .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-family: 'Poppins';
 }
+
+input, button {
+    font-family: 'Poppins', sans-serif;
+}
+
 .actions {
     display: flex;
     gap: 10px;
+}
+
+#project {
+    background-color: #5B3FFF;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+#project:hover {
+    background-color: #4A32CC; 
+}
+
+#pretraga {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 180px;
+}
+.kartica h2 {
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.kartica .opis {
+    margin-bottom: 12px;
+    color: #666;
+}
+
+.kartica.aktivna {
+    border: 2px solid #5B3FFF;
+    position: relative;
+}
+
+
+.tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: #5B3FFF;
+    color: #fff;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+.new-card {
+    border: 2px dashed #bbbbbb;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #777;
+    box-shadow: none;
+}
+
+.new-card:hover{
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+
+.new-card .new-icon {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+@media (max-width: 750px) {
+    #sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+    }
+
+    #glavnisadrzaj {
+        margin-left: 0;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
+    }
 }

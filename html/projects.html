@@ -1,16 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="bs">
     <head>
         <link rel="stylesheet" type="text/css" href="../css/projects.css">
         <meta charset="UTF-8">
     </head>
     <body>
         <div id="sidebar">
-            <h1>ScriptFlow</h1>
+            <h1>ScenarijPro</h1>
             <ul>
-                <li class="active"><a href="#">Projects</a></li>
-                <li><a href="#">Statistics</a></li>
-                <li><a href="#">Settings</a></li>
+                <li class="active"><a href="#">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h3l2 2h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z"/>
+                    </svg>Projekti</a>
+                </li>
+                <li><a href="#">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 20H2V10m4 6v-4m4 4V4m4 12v-8"/>
+                    </svg>Statistika</a>
+                </li>
+                <li><a href="#">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="10" cy="10" r="3"/>
+                    <path d="M19.4 12a7.7 7.7 0 0 0 0-4l-2.1-.3a5.4 5.4 0 0 0-.9-1.6l1.2-1.9a7.7 7.7 0 0 0-2.8-2.8L13.6 2a5.4 5.4 0 0 0-1.6-.9L12 0.6a7.7 7.7 0 0 0-4 0L7.7 2.1a5.4 5.4 0 0 0-1.6.9L4.2 1.2A7.7 7.7 0 0 0 1.4 4l1.2 1.9a5.4 5.4 0 0 0-.9 1.6L0.6 8a7.7 7.7 0 0 0 0 4l2.1.3a5.4 5.4 0 0 0 .9 1.6L2.4 15.8a7.7 7.7 0 0 0 2.8 2.8l1.9-1.2a5.4 5.4 0 0 0 1.6.9l.3 2.1a7.7 7.7 0 0 0 4 0l.3-2.1a5.4 5.4 0 0 0 1.6-.9l1.9 1.2a7.7 7.7 0 0 0 2.8-2.8l-1.2-1.9a5.4 5.4 0 0 0 .9-1.6l2.1-.3z"/>
+                    </svg>Postavke</a>
+                </li>
             </ul>
             <hr>
             <div class="user">
@@ -27,16 +40,45 @@
             <div class="header">
             <h1>Svi scenariji</h1>
             <div class="actions">
-            <input type="button" id="project" value="+ Novi projekat">
             <input type="text" id="pretraga" name="pretraga" placeholder="Pretraga">
+            <input type="button" id="project" value="+ Novi projekat">
             </div>
             </div>
             <div class="grid">
-                <div class="kartica"></div>
-                <div class="kartica"></div>
-                <div class="kartica"></div>
-                <div class="kartica"></div>
-            </div>
+                <div class="kartica aktivna">
+                    <span class="tag">Aktivan</span>
+                    <h2>POSLJEDNJA LETJELICA</h2>
+                    <p class="opis">Sci-Fi igrani film</p>
+
+                    <p><strong>Status:</strong> Druga verzija</p>
+                    <p><strong>Broj stranica:</strong> 105</p>
+                    <p><strong>Vrijeme posljednje izmjene:</strong> Prije 2 sata</p>
+                </div>
+
+                <div class="kartica">
+                    <h2>Tihi grad</h2>
+                    <p class="opis">Misterija</p>
+
+                    <p><strong>Status:</strong> Outline gotov</p>
+                    <p><strong>Broj stranica:</strong> 12</p>
+                    <p><strong>Vrijeme posljednje izmjene:</strong> Jučer</p>
+                </div>
+
+                <div class="kartica">
+                    <h2>Arhitektova tajna</h2>
+                    <p class="opis">Triler kratki film</p>
+
+                    <p><strong>Status:</strong> Finalna verzija</p>
+                    <p><strong>Broj stranica:</strong> 28</p>
+                    <p><strong>Vrijeme posljednje izmjene:</strong> Prije 3 sedmice</p>
+                </div>
+
+                <div class="kartica new-card">
+                    <div class="new-icon">+</div>
+                    <p>Kreiraj novi scenarij</p>
+                </div>
+                </div>
+
         </div>
     </body>
 </html>
