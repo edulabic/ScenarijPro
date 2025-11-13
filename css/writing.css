@@ -1,17 +1,79 @@
 @import url(http://fonts.googleapis.com/css?family=Poppins);
 
-#zaglavlje{
-    background-color: white;
+body{
     font-family: 'Poppins';
+    background-color: #f5f5f5;
+}
+
+#zaglavlje{
+    position: sticky;
+    background-color: white;
+    top:0;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 15px;
+    z-index: 100;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#zaglavlje h1{
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+}
+
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back-arrow {
+    font-size: 24px;
+    color: #333;
+    text-decoration: none;
 }
 
 .buttons{
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
+.buttons input[type="button"]{
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    padding: 8px 16px;
+    border: none;
+    background-color: #e8e8e8;
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
 
-.spasi{
+.buttons input[type="button"]:hover{
+    background-color: #f0f0f0;
+}
+
+#spasi {
     background-color: #28a745;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Poppins';
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: background-color 0.2s;
+}
 
+#spasi:hover {
+    background-color: #218838;
 }
