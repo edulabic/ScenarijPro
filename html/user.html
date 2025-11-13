@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bs">
+    <body>
+        <h1>Postavke korisničkog računa</h1>
+        <hr>
+        <p>Upravljajte vašim korisničkim računom, sigurnosnim postavkama i notifikacijama</p>
+        <div class="podaci">
+            <h1>Podaci o korisničkom računu</h1>
+            <label for="imeprezime">Ime i prezime</label><br>
+            <input type="text" id="imeprezime" placeholder="ime i prezime"><br>
+            <label for="email">Email adresa</label><br>
+            <input type="text" id="email" placeholder="email"><br>
+            <label for="br_elemenata">Broj elemenata po stranici</label><br>
+            <input type="number" id="br_elemenata"><br>
+        </div>
+        <div class="sigurnost">
+            <label for="pwd">Nova šifra</label><br>
+            <input type="password" id="pwd" placeholder="password"><br>
+            <input type="checkbox" id="authentication" name="authentication" value="auth" >
+            <label for="authentication">Omogući Two-Factor Authentication (2FA)</label>
+            
+        </div>
+        <div class="notifications">
+            <h1>Notifikacije</h1>
+            <form>
+                <label>Preferirani način komunikacije</label><br>
+                <input type="radio" id="email" name="contact" value="Email">
+                <label for="email">Email</label>
+                <input type="radio" id="SMS" name="contact" value="SMS">
+                <label for="SMS">SMS</label>
+                <input type="radio" id="none" name="contact" value="None">
+                <label for="none">None</label><br>
+                <label for="frequency">Notification frequency</label>
+                <select id="frequency">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="never">Never</option>
+                </select>
+            </form>
+            <hr>
+            <input type="button" id="save" value="Spasi promjene">
+        </div>
+    </body>
+</html>
