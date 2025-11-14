@@ -1,0 +1,176 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px;
+}
+
+.forma {
+    background: white;
+    max-width: 840px;
+    width: 100%;
+    padding: 40px 60px;
+    border-radius: 12px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+
+.forma > h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.forma > hr:first-of-type {
+    border: none;
+    border-top: 3px solid #5B3FFF;
+    width: 60%;
+    margin: 0 auto 20px auto;
+}
+
+.forma > p {
+   text-align: center;
+    font-style: italic;
+    color: #666;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+
+.podaci, .sigurnost, .notifications {
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.podaci {
+    background: #e8eaf6;
+}
+
+.sigurnost {
+    background: #fdecea;
+}
+
+.notifications {
+    background: #e0f2f1;
+}
+
+.podaci h2 {
+    color: #3f51b5;
+}
+
+.sigurnost h2 {
+    color: #c62828;
+}
+
+.notifications h2 {
+    color: #00796b;
+}
+
+.podaci h2,
+.sigurnost h2,
+.notifications h2 {
+    font-size: 19px;
+    margin-bottom: 25px;
+    font-weight: bold;
+}
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 20px;
+    background: white;
+}
+
+input:focus, select:focus {
+    border-color: #5B3FFF;
+    outline: none;
+    box-shadow: 0 0 4px rgba(91,63,255,0.3);
+}
+
+label {
+    font-size: 14px;
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #444;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.radio-container {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+button {
+    width: 100%;
+    padding: 18px;
+    background-color: #5B3FFF;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+button:hover {
+    background-color: #4a32cc;
+}
+
+@media (min-width: 750px) {
+
+    .podaci label,
+    .sigurnost label[for="pwd"],
+    .notifications .main-label,
+    .notifications label[for="frequency"] {
+        display: inline-block;
+        width: 280px;   
+        text-align: left;
+        margin-right: 25px;
+        vertical-align: middle;
+    }
+
+    .podaci input,
+    .sigurnost input[type="password"],
+    .notifications select {
+        display: inline-block;
+        width: calc(100% - 305px);
+    }
+
+    .radio-container {
+        margin-left: 0; 
+    }
+
+    .checkbox-wrapper {
+        margin-left: 0;
+    }
+
+}
