@@ -103,6 +103,7 @@ body {
     flex-shrink: 0;
     background-color: #fafafa;
     padding: 20px;
+    min-height: 100vh;
 }
 
 #sidebar h1 {
