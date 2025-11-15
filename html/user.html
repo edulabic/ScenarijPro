@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="bs">
-    <head><link rel="stylesheet" href="../css/user.css">
     <meta charset="UTF-8">
-    </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/user.css">
     <body>
         <form class="forma">
         <h1>Postavke korisničkog računa</h1>
@@ -10,31 +10,44 @@
         <p>Upravljajte vašim korisničkim računom, sigurnosnim postavkama i notifikacijama</p>
         <div class="podaci">
             <h2>Podaci o korisničkom računu</h2>
+            <div class="form-row">
             <label for="imeprezime">Ime i prezime</label>
             <input type="text" id="imeprezime" placeholder="John Doe">
+            </div>
+            <div class="form-row">
             <label for="email-input">Email adresa</label>
             <input type="text" id="email-input" placeholder="john.doe@example.com">
+            </div>
+            <div class="form-row">
             <label for="br_elemenata">Broj elemenata po stranici</label>
             <input type="number" id="br_elemenata" min="1" max="100" value="25">
+            </div>
         </div>
         <div class="sigurnost">
             <h2>Sigurnosne postavke</h2>
+            <div class="form-row">
             <label for="pwd">Nova šifra</label>
-            <input type="password" id="pwd" placeholder="••••••••"><br>
+            <input type="password" id="pwd" placeholder="••••••••">
+            </div>
+            <div class="checkbox-wrapper">
             <input type="checkbox" id="authentication" name="authentication" value="auth" >
             <label for="authentication">Omogući Two-Factor Authentication (2FA)</label>
+            </div>
         </div>
         <div class="notifications">
             <h2>Notifikacije</h2>
+            <div class="radio-wrapper">
                 <label class="main-label">Preferirani način komunikacije</label>
                 <div class="radio-container">
-                <input type="radio" id="email-radio" name="contact" value="Email">
-                <label for="email-radio">Email</label>
-                <input type="radio" id="SMS" name="contact" value="SMS">
-                <label for="SMS">SMS</label>
-                <input type="radio" id="none" name="contact" value="None">
-                <label for="none">None</label><br>
+                    <input type="radio" id="email-radio" name="contact" value="Email">
+                    <label for="email-radio">Email</label>
+                    <input type="radio" id="SMS" name="contact" value="SMS">
+                    <label for="SMS">SMS</label>
+                    <input type="radio" id="none" name="contact" value="None">
+                    <label for="none">None</label>
                 </div>
+            </div>
+                <div class="form-row">
                 <label for="frequency">Notification frequency</label>
                 <select id="frequency">
                     <option value="daily">Daily</option>
@@ -42,6 +55,7 @@
                     <option value="monthly">Monthly</option>
                     <option value="never">Never</option>
                 </select>
+                </div>
             </div>
             <hr>
             <button type="submit" id="save">Spasi promjene</button>
