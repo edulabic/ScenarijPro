@@ -94,10 +94,8 @@ body {
 
 .content-wrapper {
     display: flex;
-    gap: 20px;
-    padding: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
+    gap: 0;
+    padding: 0;
 }
 
 #sidebar {
@@ -105,7 +103,6 @@ body {
     flex-shrink: 0;
     background-color: #fafafa;
     padding: 20px;
-    border-radius: 8px;
 }
 
 #sidebar h1 {
@@ -165,6 +162,8 @@ body {
     font-size: 12pt;
     line-height: 1.5;
     min-height: 600px;
+    margin: 20px 20px 20px 20px;
+    max-width: 1150px;
 }
 
 .scene-heading {
@@ -176,20 +175,29 @@ body {
 
 .action {
     margin-bottom: 1.5em;
+     text-indent: 2em;
 }
 
 @media (max-width: 750px) {
     .content-wrapper {
         flex-direction: column;
+        gap: 0;
     }
     
     #sidebar {
         width: 100%;
+        order: -1;
+    }
+    
+    #editor {
+        padding: 40px 30px;
+        margin: 0 20px 20px 20px;
     }
     
     .buttons {
         width: 100%;
         justify-content: center;
+        max-width: 400px;
     }
     
     #zaglavlje {
@@ -203,9 +211,6 @@ body {
     
     #spasi {
         width: 100%;
-    }
-    
-    #editor {
-        padding: 40px 30px;
+        max-width: 400px;
     }
 }
