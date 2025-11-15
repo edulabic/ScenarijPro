@@ -140,6 +140,24 @@ label {
     display: flex;
     align-items: center;
     gap: 25px;
+    flex-wrap: wrap;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap; 
+}
+
+.radio-item label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+.radio-item input[type="radio"] {
+    margin: 0;
+    cursor: pointer;
 }
 
 button {
