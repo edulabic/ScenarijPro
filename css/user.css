@@ -19,7 +19,7 @@ body {
 .forma {
     background: white;
     max-width: 840px;
-    width: 100%;
+    width: 70%;
     padding: 40px 60px;
     border-radius: 12px;
     box-shadow: 0 4px 14px rgba(0,0,0,0.12);
@@ -177,6 +177,20 @@ button:hover {
     background-color: #4a32cc;
 }
 
+@media(min-width: 900px){
+    .forma{
+        width: 70%;
+
+    }
+    .kolona{
+        width: 30%;
+    }
+
+    
+    
+}
+
+/*
 @media (min-width: 750px) {
 
     .form-row {
@@ -212,4 +226,45 @@ button:hover {
     .radio-container {
         flex: 1;
     }
+}*/
+@media (min-width: 900px) {
+
+    .forma {
+        display: flex;
+        gap: 30px;
+        max-width: 1200px;
+        width: 100%;
+    }
+
+    .left-column {
+        width: 70%;
+    }
+
+    .right-column {
+        width: 30%;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-row label {
+        width: 160px;       
+        margin-right: 15px;
+    }
+
+    .form-row input,
+    .form-row select {
+        width: 30%;
+    }
+
+    .radio-wrapper .main-label {
+        width: 160px;
+        margin-right: 15px;
+    }
 }
+
