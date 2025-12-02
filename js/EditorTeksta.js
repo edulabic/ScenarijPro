@@ -238,11 +238,213 @@ let dajUloge = function () {
             return false;
         }
     };
+
+let brojLinijaTeksta = function(uloga) {
+    let ulogaUpper = uloga.toUpperCase();
+    let tekst = divElement.innerText || divElement.textContent;
+    let linije = tekst.split('\n');
+    let ukupnoLinija = 0;
+    
+    for (let i = 0; i < linije.length; i++) {
+        let linija = linije[i].trim();
+        
+        // Provjeri da li je ovo linija sa imenom uloge
+        if (linija === ulogaUpper) {
+            // Prebroj linije govora nakon imena uloge
+            for (let j = i + 1; j < linije.length; j++) {
+                let govorLinija = linije[j].trim();
+                
+                // Ako je prazna linija, nova uloga ili nova scena - prekini
+                if (govorLinija === '') break;
+                if (/^[A-ZČĆŽŠĐ\s]+$/.test(govorLinija) && /[A-ZČĆŽŠĐ]/.test(govorLinija)) break;
+                
+                // Provjeri da li je linija u potpunosti u zagradama
+                if (/^\([^)]*\)$/.test(govorLinija)) {
+                    continue; // Preskoči linije u zagradama
+                }
+                
+                ukupnoLinija++;
+            }
+        }
+    }
+    
+    return ukupnoLinija;
+};
+
+let scenarijUloge = function(uloga) {
+    let ulogaUpper = uloga.trim().toUpperCase();
+    let tekst = divElement.innerText || divElement.textContent;
+    let linije = tekst.split('\n');
+    let rezultat = [];
+    
+    function jePrazna(linija) {
+        return /^\s*$/.test(linija);
+    }
+    
+    function jeUlogaLinija(linija) {
+        let trimmed = linija.trim();
+        if (trimmed.length === 0) return false;
+        if (!/[A-ZČĆŽŠĐ]/i.test(trimmed)) return false;
+        if (!/^[A-ZČĆŽŠĐ\s]+$/.test(trimmed)) return false;
+        return true;
+    }
+    
+    function jeNaslovScene(linija) {
+        let trimmed = linija.trim();
+        if (!/^(INT\.|EXT\.)/.test(trimmed)) return false;
+        if (!/-\s*(DAY|NIGHT|AFTERNOON|MORNING|EVENING)\s*$/i.test(trimmed)) return false;
+        return true;
+    }
+    
+    function jeLinijaUZagradama(linija) {
+        let trimmed = linija.trim();
+        return /^\([^)]*\)$/.test(trimmed);
+    }
+    
+    function jeGovorLinija(linija) {
+        let trimmed = linija.trim();
+        if (jePrazna(trimmed)) return false;
+        if (jeUlogaLinija(trimmed)) return false;
+        if (jeNaslovScene(trimmed)) return false;
+        if (jeLinijaUZagradama(trimmed)) return false;
+        return trimmed.length > 0;
+    }
+
+    let struktura = [];
+    let trenutnaScena = "";
+    let i = 0;
+    
+    while (i < linije.length) {
+        let linija = linije[i];
+        let trimmed = linija.trim();
+        
+        if (jePrazna(trimmed)) {
+            i++;
+            continue;
+        }
+        
+        if (jeNaslovScene(trimmed)) {
+            trenutnaScena = trimmed;
+            i++;
+            continue;
+        }
+        
+        if (jeUlogaLinija(trimmed)) {
+            let imeUloge = trimmed.toUpperCase();
+            let govorLinije = [];
+            let j = i + 1;
+            
+            while (j < linije.length) {
+                let govorLinija = linije[j];
+                let govorTrimmed = govorLinija.trim();
+                
+                if (jePrazna(govorTrimmed)) {
+                    j++;
+                    break;
+                }
+                if (jeUlogaLinija(govorTrimmed)) {
+                    break;
+                }
+                
+                if (jeNaslovScene(govorTrimmed)) {
+                    break;
+                }
+                
+                if (jeLinijaUZagradama(govorTrimmed)) {
+                    j++;
+                    continue;
+                }
+                
+                if (jeGovorLinija(govorTrimmed)) {
+                    govorLinije.push(govorTrimmed);
+                    j++;
+                } else {
+                    break;
+                }
+            }
+            
+            if (govorLinije.length > 0) {
+                struktura.push({
+                    tip: 'replika',
+                    uloga: imeUloge,
+                    linije: govorLinije,
+                    scena: trenutnaScena,
+                    indeks: i
+                });
+            }
+            
+            i = j;
+            continue;
+        }
+        
+        struktura.push({
+            tip: 'akcija',
+            indeks: i
+        });
+        
+        i++;
+    }
+    
+    for (let idx = 0; idx < struktura.length; idx++) {
+        let stavka = struktura[idx];
+        
+        if (stavka.tip !== 'replika') continue;
+        if (stavka.uloga !== ulogaUpper) continue;
+        
+        let prethodni = null;
+        for (let p = idx - 1; p >= 0; p--) {
+            if (struktura[p].tip === 'akcija') break;
+            if (struktura[p].scena !== stavka.scena) break;
+            if (struktura[p].tip === 'replika') {
+                prethodni = {
+                    uloga: struktura[p].uloga,
+                    linije: struktura[p].linije
+                };
+                break;
+            }
+        }
+        
+        let sljedeci = null;
+        for (let s = idx + 1; s < struktura.length; s++) {
+            if (struktura[s].tip === 'akcija') break;
+            if (struktura[s].scena !== stavka.scena) break;
+            if (struktura[s].tip === 'replika') {
+                sljedeci = {
+                    uloga: struktura[s].uloga,
+                    linije: struktura[s].linije
+                };
+                break;
+            }
+        }
+        
+        let pozicijaUTekstu = 1;
+        for (let p = 0; p < idx; p++) {
+            if (struktura[p].tip === 'replika' && struktura[p].scena === stavka.scena) {
+                pozicijaUTekstu++;
+            }
+        }
+        
+        rezultat.push({
+            scena: stavka.scena,
+            pozicijaUTekstu: pozicijaUTekstu,
+            prethodni: prethodni,
+            trenutni: {
+                uloga: stavka.uloga,
+                linije: stavka.linije
+            },
+            sljedeci: sljedeci
+        });
+    }
+    
+    return rezultat;
+};
     
     return {
         dajBrojRijeci: dajBrojRijeci,
         dajUloge: dajUloge,
         formatirajTekst: formatirajTekst,
-        pogresnaUloga: pogresnaUloga
+        pogresnaUloga: pogresnaUloga,
+        brojLinijaTeksta: brojLinijaTeksta,    
+        scenarijUloge: scenarijUloge     
     };
 };

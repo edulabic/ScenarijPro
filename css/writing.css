@@ -255,6 +255,14 @@ body {
     background-color: #E9EEFF;
     color: #333;
 }
+#ulogaInput {
+    padding: 5px 10px;
+    margin: 0 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 150px;
+}
 
 @media (max-width: 750px) {
     .content-wrapper {

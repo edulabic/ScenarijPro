@@ -44,3 +44,49 @@ document.getElementById("pogresneUlogeBtn").addEventListener("click", function()
         prikaziPoruku("Nema potencijalno pogrešnih uloga.");
     }
 });
+
+document.getElementById("brojLinijaBtn").addEventListener("click", function() {
+    let uloga = document.getElementById("ulogaInput").value.trim();
+    if (!uloga) {
+        prikaziPoruku("Molimo unesite ime uloge.");
+        return;
+    }
+    let broj = editor.brojLinijaTeksta(uloga);
+    prikaziPoruku(`Uloga "${uloga}" ima ${broj} linija teksta.`);
+});
+
+document.getElementById("scenarijUlogeBtn").addEventListener("click", function() {
+    let uloga = document.getElementById("ulogaInput").value.trim();
+    if (!uloga) {
+        prikaziPoruku("Molimo unesite ime uloge.");
+        return;
+    }
+    let scenarij = editor.scenarijUloge(uloga);
+    if (scenarij.length === 0) {
+        prikaziPoruku(`Uloga "${uloga}" ne postoji u scenariju.`);
+    } else {
+        let html = `<h3>Scenarij za ulogu: ${uloga.toUpperCase()}</h3>`;
+        html += `<p>Ukupno replika: ${scenarij.length}</p>`;
+        
+        scenarij.forEach((stavka, index) => {
+            html += `<div style="margin-bottom: 15px; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">`;
+            html += `<strong>Replika ${index + 1}</strong><br>`;
+            html += `Scena: ${stavka.scena}<br>`;
+            html += `Pozicija u sceni: ${stavka.pozicijaUTekstu}<br><br>`;
+            
+            if (stavka.prethodni) {
+                html += `<em>Prethodni (${stavka.prethodni.uloga}):</em> ${stavka.prethodni.linije.join(' ')}<br>`;
+            }
+            
+            html += `<strong style="color: #007bff;">${stavka.trenutni.uloga}:</strong> ${stavka.trenutni.linije.join(' ')}<br>`;
+            
+            if (stavka.sljedeci) {
+                html += `<em>Sljedeći (${stavka.sljedeci.uloga}):</em> ${stavka.sljedeci.linije.join(' ')}`;
+            }
+            
+            html += `</div>`;
+        });
+        
+        document.getElementById("poruke").innerHTML = html;
+    }
+});
