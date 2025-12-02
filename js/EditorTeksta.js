@@ -100,6 +100,7 @@ let dajUloge = function () {
     function jeObicanGovor(linija) {
         let trimmed = linija.trim();
         if (jePrazna(trimmed)) return false;
+        if (/^\(.+\)$/.test(trimmed)) return false;
         let jeSveVeliko = /^[A-ZČĆŽŠĐ\s]+$/.test(trimmed);
         return !jeSveVeliko;
     }
@@ -108,17 +109,17 @@ let dajUloge = function () {
         let linija = linije[i];
 
         if (!jeUlogaLinija(linija)) continue;
-
         let imaGovor = false;
         for (let j = i + 1; j < linije.length; j++) {
-            let sljedeca = linije[j];
+            let sljedeca = linije[j].trim();
             if (jePrazna(sljedeca)) continue;
-
+            if (/^\(.+\)$/.test(sljedeca)) continue;
             if (jeObicanGovor(sljedeca)) {
-                imaGovor = true;
-            }
-            break;
-        }
+            imaGovor = true;
+         }
+    break; 
+}
+
 
         if (imaGovor) {
             let ime = linija.trim();
