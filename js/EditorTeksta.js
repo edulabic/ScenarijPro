@@ -207,6 +207,11 @@ let dajUloge = function () {
 
     
     let formatirajTekst = function(komanda) {
+
+        let dozvoljene = ['bold', 'italic', 'underline'];
+        if (!dozvoljene.includes(komanda)) {
+        return false;
+        }
         let selection = window.getSelection();
         
         if (!selection || selection.rangeCount === 0 || selection.isCollapsed) {
@@ -249,19 +254,14 @@ let brojLinijaTeksta = function(uloga) {
     for (let i = 0; i < linije.length; i++) {
         let linija = linije[i].trim();
         
-        // Provjeri da li je ovo linija sa imenom uloge
         if (linija === ulogaUpper) {
-            // Prebroj linije govora nakon imena uloge
             for (let j = i + 1; j < linije.length; j++) {
                 let govorLinija = linije[j].trim();
-                
-                // Ako je prazna linija, nova uloga ili nova scena - prekini
                 if (govorLinija === '') break;
                 if (/^[A-ZČĆŽŠĐ\s]+$/.test(govorLinija) && /[A-ZČĆŽŠĐ]/.test(govorLinija)) break;
                 
-                // Provjeri da li je linija u potpunosti u zagradama
                 if (/^\([^)]*\)$/.test(govorLinija)) {
-                    continue; // Preskoči linije u zagradama
+                    continue; 
                 }
                 
                 ukupnoLinija++;
