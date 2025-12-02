@@ -35,3 +35,12 @@ document.getElementById("ulogeBtn").addEventListener("click", function() {
         prikaziPoruku("Nema pronađenih uloga u tekstu.");
     }
 });
+
+document.getElementById("pogresneUlogeBtn").addEventListener("click", function() {
+    let pogresne = editor.pogresnaUloga();
+    if (pogresne.length > 0) {
+        prikaziPoruku(`Potencijalno pogrešne uloge: ${pogresne.join(", ")}`);
+    } else {
+        prikaziPoruku("Nema potencijalno pogrešnih uloga.");
+    }
+});

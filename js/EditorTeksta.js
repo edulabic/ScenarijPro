@@ -133,6 +133,75 @@ let dajUloge = function () {
 };
 
 
+    let pogresnaUloga = function () {
+    let uloge = dajUloge();
+    let brojPojavljivanja = {};
+    
+    let tekst = divElement.innerText || divElement.textContent;
+    let linije = tekst.split('\n');
+    
+    for (let linija of linije) {
+        let trimmed = linija.trim();
+        if (/^[A-ZČĆŽŠĐ\s]+$/.test(trimmed) && /[A-ZČĆŽŠĐ]/.test(trimmed)) {
+            if (brojPojavljivanja[trimmed]) {
+                brojPojavljivanja[trimmed]++;
+            } else {
+                brojPojavljivanja[trimmed] = 1;
+            }
+        }
+    }
+    
+    function razlika(s1, s2) {
+        let m = s1.length, n = s2.length;
+        let dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+        
+        for (let i = 0; i <= m; i++) dp[i][0] = i;
+        for (let j = 0; j <= n; j++) dp[0][j] = j;
+        
+        for (let i = 1; i <= m; i++) {
+            for (let j = 1; j <= n; j++) {
+                if (s1[i-1] === s2[j-1]) {
+                    dp[i][j] = dp[i-1][j-1];
+                } else {
+                    dp[i][j] = 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+                }
+            }
+        }
+        return dp[m][n];
+    }
+    
+    let pogresna = [];
+    
+    for (let i = 0; i < uloge.length; i++) {
+        let imeA = uloge[i];
+        let brojA = brojPojavljivanja[imeA] || 0;
+        
+        for (let j = 0; j < uloge.length; j++) {
+            if (i === j) continue;
+            
+            let imeB = uloge[j];
+            let brojB = brojPojavljivanja[imeB] || 0;
+            
+            let duzina = Math.max(imeA.length, imeB.length);
+            let razl = razlika(imeA, imeB);
+            
+            let veomaSlicna = false;
+            if (duzina <= 5 && razl <= 1) {
+                veomaSlicna = true;
+            } else if (duzina > 5 && razl <= 2) {
+                veomaSlicna = true;
+            }
+            if (veomaSlicna && brojB >= 4 && (brojB - brojA) >= 3) {
+                if (!pogresna.includes(imeA)) {
+                    pogresna.push(imeA);
+                }
+                break;
+            }
+        }
+    }
+    
+    return pogresna;
+};
 
 
     
@@ -173,6 +242,7 @@ let dajUloge = function () {
     return {
         dajBrojRijeci: dajBrojRijeci,
         dajUloge: dajUloge,
-        formatirajTekst: formatirajTekst
+        formatirajTekst: formatirajTekst,
+        pogresnaUloga: pogresnaUloga
     };
 };
