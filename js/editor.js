@@ -90,3 +90,26 @@ document.getElementById("scenarijUlogeBtn").addEventListener("click", function()
         document.getElementById("poruke").innerHTML = html;
     }
 });
+
+document.getElementById("grupisiUlogeBtn").addEventListener("click", function() {
+    let grupe = editor.grupisiUloge();
+    
+    if (grupe.length === 0) {
+        prikaziPoruku("Nema pronađenih dijalog-segmenata u scenariju.");
+        return;
+    }
+    
+    let html = `<h3>Grupisane uloge po dijalog-segmentima</h3>`;
+    html += `<p>Ukupno segmenata: ${grupe.length}</p>`;
+    
+    grupe.forEach((grupa, index) => {
+        html += `<div style="margin-bottom: 15px; border: 1px solid #ddd; padding: 10px; background: #f9f9f9;">`;
+        html += `<strong>Grupa ${index + 1}</strong><br>`;
+        html += `Scena: ${grupa.scena}<br>`;
+        html += `Segment u sceni: ${grupa.segment}<br>`;
+        html += `Uloge: <span style="color: #007bff; font-weight: bold;">${grupa.uloge.join(", ")}</span>`;
+        html += `</div>`;
+    });
+    
+    document.getElementById("poruke").innerHTML = html;
+});

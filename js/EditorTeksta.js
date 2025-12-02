@@ -438,13 +438,206 @@ let scenarijUloge = function(uloga) {
     
     return rezultat;
 };
+    let grupisiUloge = function() {
+    let tekst = divElement.innerText || divElement.textContent;
+    let linije = tekst.split('\n');
+    let rezultat = [];
     
+    function jePrazna(linija) {
+        return /^\s*$/.test(linija);
+    }
+    
+    function jeUlogaLinija(linija) {
+        let trimmed = linija.trim();
+        if (trimmed.length === 0) return false;
+        if (!/[A-ZČĆŽŠĐ]/i.test(trimmed)) return false;
+        if (!/^[A-ZČĆŽŠĐ\s]+$/.test(trimmed)) return false;
+        return true;
+    }
+    
+    function jeNaslovScene(linija) {
+        let trimmed = linija.trim();
+        if (!/^(INT\.|EXT\.)/.test(trimmed)) return false;
+        if (!/-\s*(DAY|NIGHT|AFTERNOON|MORNING|EVENING)\s*$/i.test(trimmed)) return false;
+        return true;
+    }
+    
+    function jeLinijaUZagradama(linija) {
+        let trimmed = linija.trim();
+        return /^\([^)]*\)$/.test(trimmed);
+    }
+    
+    function jeGovorLinija(linija) {
+        let trimmed = linija.trim();
+        if (jePrazna(trimmed)) return false;
+        if (jeUlogaLinija(trimmed)) return false;
+        if (jeNaslovScene(trimmed)) return false;
+        if (jeLinijaUZagradama(trimmed)) return false;
+        return trimmed.length > 0;
+    }
+    let struktura = [];
+    let trenutnaScena = "";
+    let i = 0;
+    
+    while (i < linije.length) {
+        let linija = linije[i];
+        let trimmed = linija.trim();
+        
+        if (jePrazna(trimmed)) {
+            i++;
+            continue;
+        }
+        
+        if (jeNaslovScene(trimmed)) {
+            trenutnaScena = trimmed;
+            struktura.push({
+                tip: 'naslov_scene',
+                scena: trenutnaScena,
+                indeks: i
+            });
+            i++;
+            continue;
+        }
+        
+        if (jeUlogaLinija(trimmed)) {
+            let imeUloge = trimmed.toUpperCase();
+            let govorLinije = [];
+            let j = i + 1;
+            
+            while (j < linije.length) {
+                let govorLinija = linije[j];
+                let govorTrimmed = govorLinija.trim();
+                
+                if (jePrazna(govorTrimmed)) {
+                    j++;
+                    break;
+                }
+                
+                if (jeUlogaLinija(govorTrimmed)) {
+                    break;
+                }
+                
+                if (jeNaslovScene(govorTrimmed)) {
+                    break;
+                }
+                
+                if (jeLinijaUZagradama(govorTrimmed)) {
+                    j++;
+                    continue;
+                }
+                
+                if (jeGovorLinija(govorTrimmed)) {
+                    govorLinije.push(govorTrimmed);
+                    j++;
+                } else {
+                    break;
+                }
+            }
+            
+            if (govorLinije.length > 0) {
+                struktura.push({
+                    tip: 'replika',
+                    uloga: imeUloge,
+                    linije: govorLinije,
+                    scena: trenutnaScena,
+                    indeks: i
+                });
+            }
+            
+            i = j;
+            continue;
+        }
+        
+        struktura.push({
+            tip: 'akcija',
+            scena: trenutnaScena,
+            indeks: i
+        });
+        
+        i++;
+    }
+    
+    let dijalogSegmenti = [];
+    let trenutniSegment = null;
+    
+    for (let idx = 0; idx < struktura.length; idx++) {
+        let stavka = struktura[idx];
+        
+        if (stavka.tip === 'naslov_scene') {
+            if (trenutniSegment && trenutniSegment.replike.length > 0) {
+                dijalogSegmenti.push(trenutniSegment);
+            }
+            trenutniSegment = null;
+            continue;
+        }
+        
+        if (stavka.tip === 'akcija') {
+            if (trenutniSegment && trenutniSegment.replike.length > 0) {
+                dijalogSegmenti.push(trenutniSegment);
+            }
+            trenutniSegment = null;
+            continue;
+        }
+        
+        if (stavka.tip === 'replika') {
+            if (!trenutniSegment || trenutniSegment.scena !== stavka.scena) {
+                if (trenutniSegment && trenutniSegment.replike.length > 0) {
+                    dijalogSegmenti.push(trenutniSegment);
+                }
+                trenutniSegment = {
+                    scena: stavka.scena,
+                    replike: []
+                };
+            }
+            
+            trenutniSegment.replike.push({
+                uloga: stavka.uloga,
+                indeks: stavka.indeks
+            });
+        }
+    }
+    
+    if (trenutniSegment && trenutniSegment.replike.length > 0) {
+        dijalogSegmenti.push(trenutniSegment);
+    }
+    
+    let brojacPoScenama = {};
+    
+    for (let segment of dijalogSegmenti) {
+        let scena = segment.scena;
+        
+        if (!brojacPoScenama[scena]) {
+            brojacPoScenama[scena] = 0;
+        }
+        brojacPoScenama[scena]++;
+        let brSegmenta = brojacPoScenama[scena];
+        
+        let uloge = [];
+        let vidjeneUloge = new Set();
+        
+        for (let replika of segment.replike) {
+            if (!vidjeneUloge.has(replika.uloga)) {
+                uloge.push(replika.uloga);
+                vidjeneUloge.add(replika.uloga);
+            }
+        }
+        
+        rezultat.push({
+            scena: scena,
+            segment: brSegmenta,
+            uloge: uloge
+        });
+    }
+    
+    return rezultat;
+};
     return {
         dajBrojRijeci: dajBrojRijeci,
         dajUloge: dajUloge,
         formatirajTekst: formatirajTekst,
         pogresnaUloga: pogresnaUloga,
         brojLinijaTeksta: brojLinijaTeksta,    
-        scenarijUloge: scenarijUloge     
+        scenarijUloge: scenarijUloge,
+        grupisiUloge: grupisiUloge 
     };
 };
