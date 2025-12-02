@@ -41,14 +41,29 @@
                 </li>
             </ul>
         </div>
+        
+        <div style="flex: 1;">
+            <div id="toolbar">
+                <button id="boldBtn"><b>B</b></button>
+                <button id="italicBtn"><i>I</i></button>
+                <button id="underlineBtn"><u>U</u></button>
+                <button id="brojRijeciBtn">Broj riječi</button>
+                <button id="ulogeBtn">Uloge</button>
+            </div>
+            
+            <div id="poruke"></div>
 
-        <div id="editor">
-            <div class="scene-heading">INT. STARA KUĆA - NOĆ</div>
-            <div class="action">
+            <div id="editor" contenteditable="true">
+                <div class="scene-heading">INT. STARA KUĆA - NOĆ</div>
+                <div class="action">
                     Prazna soba. Kroz prozor prodire bljedunjava svjetlost ulične lampe. Dino (30-ih, umoran) ulazi polako, dok mu koraci odjekuju po drvenom podu.
                     Na zidovima se vide slabe sjene, a u zraku se osjeti lagana prašina koja se jedva primjećuje u svjetlu.
+                </div>
             </div>
         </div>
         </div>
+        
+        <script src="../js/EditorTeksta.js"></script>
+        <script src="../js/editor.js"></script>
     </body>
 </html>
