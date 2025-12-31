@@ -14,5 +14,12 @@
     "nextLineId": 2,
     "content": "",
     "timestamp": 1767145095
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1767146445
   }
 ]

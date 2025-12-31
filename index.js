@@ -228,3 +228,54 @@ app.post('/api/scenarios/:scenarioId/characters/lock', (req, res) => {
     });
 });
 
+app.post('/api/scenarios/:scenarioId/characters/update', (req, res) => {
+    const scenarioId = parseInt(req.params.scenarioId);
+    const { userId, oldName, newName } = req.body;
+
+    const scenarioPath = `./data/scenarios/scenario-${scenarioId}.json`;
+
+    if (!fs.existsSync(scenarioPath)) {
+        return res.status(404).json({
+            message: "Scenario ne postoji!"
+        });
+    }
+
+    const scenario = readJSON(scenarioPath);
+
+    const lockIndex = locks.findIndex(l =>
+        l.type === "character" &&
+        l.scenarioId === scenarioId &&
+        l.characterName === oldName
+    );
+
+    if (lockIndex === -1 || locks[lockIndex].userId !== userId) {
+        return res.status(409).json({
+            message: "Ime lika nije zakljucano od strane ovog korisnika!"
+        });
+    }
+    scenario.content.forEach(line => {
+        if (typeof line.text === "string") {
+            const regex = new RegExp(`\\b${oldName}\\b`, 'g');
+            line.text = line.text.replace(regex, newName);
+        }
+    });
+
+    const deltas = readJSON('./data/deltas.json');
+
+    deltas.push({
+        scenarioId,
+        type: "char_rename",
+        oldName,
+        newName,
+        timestamp: Math.floor(Date.now() / 1000)
+    });
+
+    locks.splice(lockIndex, 1);
+
+    writeJSON(scenarioPath, scenario);
+    writeJSON('./data/deltas.json', deltas);
+
+    res.status(200).json({
+        message: "Ime lika je uspjesno promijenjeno!"
+    });
+});
