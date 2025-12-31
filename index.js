@@ -15,35 +15,42 @@ function readJSON(path) {
     return JSON.parse(fs.readFileSync(path, 'utf-8'));
 }
 
+function getNextScenarioId() {
+    const dir = './data/scenarios';
+    const files = fs.readdirSync(dir);
+
+    if (files.length === 0) return 1;
+
+    const ids = files.map(f =>
+        parseInt(f.replace('scenario-', '').replace('.json', ''))
+    );
+
+    return Math.max(...ids) + 1;
+}
+
+
 function writeJSON(path, data) {
     fs.writeFileSync(path, JSON.stringify(data, null, 2));
 }
 app.post('/api/scenarios', (req, res) => {
-    const data = readJSON('./data/scenarios.json');
-
-    const newId = data.lastScenarioId + 1;
     const title = req.body.title && req.body.title.trim() !== ''
         ? req.body.title
         : 'Neimenovani scenarij';
 
-    const newScenario = {
+    const newId = getNextScenarioId();
+
+
+    const scenario = {
         id: newId,
-        title: title,
+        title,
         content: [
-            {
-                lineId: 1,
-                nextLineId: null,
-                text: ""
-            }
+            { lineId: 1, nextLineId: null, text: "" }
         ]
     };
 
-    data.lastScenarioId = newId;
-    data.scenarios.push(newScenario);
+    writeJSON(`./data/scenarios/scenario-${newId}.json`, scenario);
 
-    writeJSON('./data/scenarios.json', data);
-
-    res.status(200).json(newScenario);
+    res.status(200).json(scenario);
 });
 
 app.post('/api/scenarios/:scenarioId/lines/:lineId/lock', (req, res) => {
@@ -51,12 +58,13 @@ app.post('/api/scenarios/:scenarioId/lines/:lineId/lock', (req, res) => {
     const lineId = parseInt(req.params.lineId);
     const userId = req.body.userId;
 
-    const scenarioData = readJSON('./data/scenarios.json');
+    const path = `./data/scenarios/scenario-${scenarioId}.json`;
 
-    const scenario = scenarioData.scenarios.find(s => s.id === scenarioId);
-    if (!scenario) {
+    if (!fs.existsSync(path)) {
         return res.status(404).json({ message: "Scenario ne postoji!" });
     }
+
+    const scenario = readJSON(path);
 
     const line = scenario.content.find(l => l.lineId === lineId);
     if (!line) {
@@ -73,11 +81,7 @@ app.post('/api/scenarios/:scenarioId/lines/:lineId/lock', (req, res) => {
 
     locks = locks.filter(l => l.userId !== userId);
 
-    locks.push({
-        scenarioId,
-        lineId,
-        userId
-    });
+    locks.push({ scenarioId, lineId, userId });
 
     res.status(200).json({ message: "Linija je uspjesno zakljucana!" });
 });
