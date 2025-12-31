@@ -59,18 +59,30 @@
                 </div>
 
             </div>
+<div id="promjena">
+    <div class="input-group">
+        <label for="userIdInput">User ID:</label>
+        <input type="number" id="userIdInput" placeholder="1" value="1">
+        
+        <label for="scenarioIdInput">Scenario ID:</label>
+        <input type="number" id="scenarioIdInput" placeholder="1" value="1">
+        
+        <button id="loadScenarioBtn">Učitaj scenario</button>
+    </div>
 
-            <div id="promjena">
-                <input type="text" id="characterName" placeholder="Ime lika">
-                <button id="lockCharacterBtn">Zaključaj lika</button>
+    <div class="input-group">
+        <label>Ime lika:</label>
+        <input type="text" id="characterName" placeholder="Unesite ime">
+        <button id="lockCharacterBtn">Zaključaj lika</button>
+    </div>
 
-
-                <input type="text" id="oldCharacterName" placeholder="Staro ime lika">
-                <input type="text" id="newCharacterName" placeholder="Novo ime lika">
-                <button id="renameCharacterBtn">Preimenuj lika</button>
-
-            </div>
-            
+    <div class="input-group">
+        <label>Promjena imena:</label>
+        <input type="text" id="oldCharacterName" placeholder="Staro ime">
+        <input type="text" id="newCharacterName" placeholder="Novo ime">
+        <button id="renameCharacterBtn">Preimenuj lika</button>
+    </div>
+</div> 
             
             <div id="poruke"></div>
 

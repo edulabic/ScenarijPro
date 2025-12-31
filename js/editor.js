@@ -2,7 +2,7 @@ let div = document.getElementById("editor");
 let editor = EditorTeksta(div);
 div.setAttribute('contenteditable', 'true');
 let lastTimestamp = 0;
-const SCENARIO_ID = 1;
+const SCENARIO_ID = getScenarioId();
 
 function prikaziPoruku(tekst) {
     let porukeDiv = document.getElementById("poruke");
@@ -117,7 +117,7 @@ document.getElementById("grupisiUlogeBtn").addEventListener("click", function() 
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-    const SCENARIO_ID = 1;
+    const SCENARIO_ID = getScenarioId();
 
     PoziviAjaxFetch.getScenario(SCENARIO_ID, (status, data) => {
         if (status !== 200) {
@@ -165,8 +165,21 @@ div.addEventListener("blur", () => {
 }
 
 function lockLine(lineId) {
-    const USER_ID = 1;
-    const SCENARIO_ID = 1;
+    function lockLine(lineId) {
+    PoziviAjaxFetch.lockLine(
+        getScenarioId(),
+        parseInt(lineId),
+        getUserId(),
+        (status, data) => {
+            if (status === 200) {
+                showStatus(`Linija ${lineId} zaključana`);
+            } else {
+                alert(data?.message || "Greška");
+            }
+        }
+    );
+}
+
     const poruke = document.getElementById("poruke");
 
     PoziviAjaxFetch.lockLine(
@@ -189,8 +202,8 @@ function lockLine(lineId) {
 
 
 function updateLine(lineId, text) {
-    const USER_ID = 1;
-    const SCENARIO_ID = 1;
+    const USER_ID = getUserId();
+    const SCENARIO_ID = getScenarioId();
 
     PoziviAjaxFetch.updateLine(
         SCENARIO_ID,
@@ -326,6 +339,27 @@ document.getElementById("lockCharacterBtn").addEventListener("click", () => {
                     `Lik "${characterName}" zaključan`;
             } else {
                 alert(data?.message || "Greška");
+            }
+        }
+    );
+});
+
+function getUserId() {
+    return parseInt(document.getElementById("userIdInput").value);
+}
+
+function getScenarioId() {
+    return parseInt(document.getElementById("scenarioIdInput").value);
+}
+
+document.getElementById("loadScenarioBtn").addEventListener("click", () => {
+    PoziviAjaxFetch.getScenario(
+        getScenarioId(),
+        (status, data) => {
+            if (status === 200) {
+                renderScenario(data);
+            } else {
+                alert("Scenario ne postoji");
             }
         }
     );
