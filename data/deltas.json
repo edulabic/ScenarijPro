@@ -37,5 +37,28 @@
     "oldName": "LALA",
     "newName": "LALICA",
     "timestamp": 1767148502
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": 2,
+    "content": "Ovo je test linije sa vise od dvadeset rijeci da vidimo da li prelamanje radi kako treba",
+    "timestamp": 1767183480
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": 2,
+    "content": "Ovo je test linije sa vise od dvadeset rijeci da vidimo da li prelamanje radi kako treba",
+    "timestamp": 1767183567
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "ALICE",
+    "newName": "ALICIA",
+    "timestamp": 1767188359
   }
 ]
