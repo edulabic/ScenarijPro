@@ -5,16 +5,11 @@
     {
       "lineId": 1,
       "nextLineId": 2,
-      "text": "Ovo je test linije sa vise od dvadeset rijeci da vidimo da li prelamanje radi kako treba"
-    },
-    {
-      "lineId": 2,
-      "text": "postaju samo stepenice ka uspjehu. Važno je ostati dosljedan, učiti iz grešaka i uvijek vjerovati u vlastite sposobnosti, jer trud",
-      "nextLineId": 3
+      "text": "Ovo je test linije sa vise od dvadeset rijeci da vidimo da li prelamanje radi kako treba i da se prelomi sve na ispravan nacin onako kako je zadano u spirali"
     },
     {
       "lineId": 3,
-      "text": "LALA je glavna junakinja djela",
+      "text": "LALICA je glavna junakinja djela",
       "nextLineId": 4
     },
     {

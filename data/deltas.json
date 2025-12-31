@@ -88,5 +88,19 @@
     "oldName": "LALICA",
     "newName": "LALA",
     "timestamp": 1767194624
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "DADA",
+    "newName": "SENADA",
+    "timestamp": 1767197283
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "LALA",
+    "newName": "LALICA",
+    "timestamp": 1767197874
   }
 ]

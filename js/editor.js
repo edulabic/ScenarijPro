@@ -116,18 +116,6 @@ document.getElementById("grupisiUlogeBtn").addEventListener("click", function() 
     document.getElementById("poruke").innerHTML = html;
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    const SCENARIO_ID = getScenarioId();
-
-    PoziviAjaxFetch.getScenario(SCENARIO_ID, (status, data) => {
-        if (status !== 200) {
-            console.error("Greška pri učitavanju scenarija");
-            return;
-        }
-
-        renderScenario(data);
-    });
-});
 
 function renderScenario(scenario) {
     const editor = document.getElementById("editor");
@@ -165,40 +153,37 @@ div.addEventListener("blur", () => {
 }
 
 function lockLine(lineId) {
-    function lockLine(lineId) {
-    PoziviAjaxFetch.lockLine(
-        getScenarioId(),
-        parseInt(lineId),
-        getUserId(),
-        (status, data) => {
-            if (status === 200) {
-                showStatus(`Linija ${lineId} zaključana`);
-            } else {
-                alert(data?.message || "Greška");
-            }
-        }
-    );
-}
-
-    const poruke = document.getElementById("poruke");
+    const USER_ID = getUserId();
+    const SCENARIO_ID = getScenarioId();
 
     PoziviAjaxFetch.lockLine(
         SCENARIO_ID,
         parseInt(lineId),
         USER_ID,
         (status, data) => {
+            const poruke = document.getElementById("poruke");
+            const statusDiv = document.getElementById("lockStatus");
+
             if (status === 200) {
                 poruke.textContent = `Linija ${lineId} zaključana`;
+                statusDiv.textContent = `Zaključana linija: ${lineId}`;
+                statusDiv.style.color = "green";
             } 
             else if (status === 409) {
                 poruke.textContent = `Linija ${lineId} je već zaključana`;
+                statusDiv.textContent = `Linija ${lineId} je već zaključana`;
+                statusDiv.style.color = "orange";
             } 
             else {
                 poruke.textContent = data?.message || "Greška";
+                statusDiv.textContent = "Greška pri zaključavanju";
+                statusDiv.style.color = "red";
             }
         }
     );
 }
+
+
 
 
 function updateLine(lineId, text) {
@@ -218,29 +203,6 @@ function updateLine(lineId, text) {
     );
 }
 
-function startDeltaPolling() {
-    setInterval(() => {
-        PoziviAjaxFetch.getDeltas(
-            SCENARIO_ID,
-            lastTimestamp,
-            (status, data) => {
-                if (status !== 200 || !data || !data.deltas) return;
-
-                data.deltas.forEach(delta => {
-                    lastTimestamp = Math.max(lastTimestamp, delta.timestamp);
-
-                    if (delta.type === "line_update") {
-                        applyLineUpdate(delta);
-                    }
-
-                    if (delta.type === "char_rename") {
-                        applyCharacterRename(delta);
-                    }
-                });
-            }
-        );
-    }, 3000);
-}
 
 function applyLineUpdate(delta) {
     const editor = document.getElementById("editor");
@@ -265,13 +227,15 @@ function applyCharacterRename(delta) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    const SCENARIO_ID = getScenarioId();
+
     PoziviAjaxFetch.getScenario(SCENARIO_ID, (status, data) => {
         if (status !== 200) return;
 
         renderScenario(data);
-        startDeltaPolling(); 
     });
 });
+
 
 document.getElementById("renameCharacterBtn").addEventListener("click", () => {
     const oldName = document.getElementById("oldCharacterName").value;
@@ -283,8 +247,8 @@ document.getElementById("renameCharacterBtn").addEventListener("click", () => {
     }
 
     PoziviAjaxFetch.updateCharacter(
-        1,        
-        1,        
+        getScenarioId(),        
+        getUserId(),        
         oldName,
         newName,
         (status, data) => {
@@ -301,26 +265,28 @@ document.getElementById("renameCharacterBtn").addEventListener("click", () => {
 let lastDelta = 0;
 
 setInterval(() => {
-    PoziviAjaxFetch.getDeltas(1, lastDelta, (status, data) => {
-        if (status === 200 && data?.deltas?.length > 0) {
+    PoziviAjaxFetch.getDeltas(
+        getScenarioId(),
+        lastDelta,
+        (status, data) => {
+            if (status !== 200 || !data?.deltas) return;
+
             data.deltas.forEach(delta => {
-                applyDelta(delta);
+                if (delta.type === "line_update") {
+                    applyLineUpdate(delta);
+                }
+
+                if (delta.type === "char_rename") {
+                    applyCharacterRename(delta);
+                }
+
                 lastDelta = Math.max(lastDelta, delta.timestamp);
             });
         }
-    });
+    );
 }, 3000);
 
-function applyDelta(delta) {
-    if (delta.type === "updateLine") {
-        const lineDiv = document.querySelector(
-            `[data-line-id="${delta.lineId}"]`
-        );
-        if (lineDiv) {
-            lineDiv.textContent = delta.newText;
-        }
-    }
-}
+
 document.getElementById("lockCharacterBtn").addEventListener("click", () => {
     const characterName = document.getElementById("characterName").value;
 
@@ -330,9 +296,9 @@ document.getElementById("lockCharacterBtn").addEventListener("click", () => {
     }
 
     PoziviAjaxFetch.lockCharacter(
-        1, 
+        getScenarioId(), 
         characterName,
-        1, 
+        getUserId(), 
         (status, data) => {
             if (status === 200) {
                 document.getElementById("poruke").textContent =
@@ -364,3 +330,31 @@ document.getElementById("loadScenarioBtn").addEventListener("click", () => {
         }
     );
 });
+
+function showStatus(text) {
+    const poruke = document.getElementById("poruke");
+    poruke.textContent = text;
+}
+
+
+document.getElementById("createScenarioBtn").addEventListener("click", () => {
+    const title = document.getElementById("newScenarioTitle").value.trim();
+
+    if (!title) {
+        alert("Unesite naslov scenarija");
+        return;
+    }
+
+    PoziviAjaxFetch.postScenario(title, (status, data) => {
+        if (status === 200 || status === 201) {
+            showStatus(`Scenarij "${title}" je kreiran (ID: ${data.id})`);
+
+            document.getElementById("scenarioIdInput").value = data.id;
+
+            renderScenario(data);
+        } else {
+            alert(data?.message || "Greška pri kreiranju scenarija");
+        }
+    });
+});
+
