@@ -102,5 +102,13 @@
     "oldName": "LALA",
     "newName": "LALICA",
     "timestamp": 1767197874
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 3,
+    "nextLineId": 4,
+    "content": "LALICA je glavna junakinja djela romana o kojem pricamo.",
+    "timestamp": 1767199760
   }
 ]

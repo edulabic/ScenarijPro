@@ -126,31 +126,28 @@ function renderScenario(scenario) {
         div.className = "line";
         div.textContent = line.text;
         div.dataset.lineId = line.lineId;
+        div.dataset.originalText = line.text;   // 👈 DODANO
         div.contentEditable = true;
 
         div.addEventListener("click", () => {
-            document.querySelectorAll(".line").forEach(l => l.classList.remove("active-line"));
+            document.querySelectorAll(".line").forEach(l =>
+                l.classList.remove("active-line")
+            );
             div.classList.add("active-line");
-
             lockLine(div.dataset.lineId);
         });
 
-        div.addEventListener("focus", () => {
-            lockLine(div.dataset.lineId);
+        div.addEventListener("blur", () => {
+            if (div.textContent !== div.dataset.originalText) {
+                updateLine(div.dataset.lineId, div.textContent);
+                div.dataset.originalText = div.textContent;
+            }
         });
-
-       let originalText = line.text;
-
-div.addEventListener("blur", () => {
-    if (div.textContent !== originalText) {
-        updateLine(div.dataset.lineId, div.textContent);
-        originalText = div.textContent;
-    }
-});
 
         editor.appendChild(div);
     });
 }
+
 
 function lockLine(lineId) {
     const USER_ID = getUserId();
@@ -358,3 +355,18 @@ document.getElementById("createScenarioBtn").addEventListener("click", () => {
     });
 });
 
+function saveActiveLineIfAny() {
+    const active = document.querySelector(".line.active-line");
+    if (!active) return;
+
+    if (active.textContent !== active.dataset.originalText) {
+        updateLine(active.dataset.lineId, active.textContent);
+        active.dataset.originalText = active.textContent;
+    }
+}
+document.addEventListener("click", function(e) {
+    const editor = document.getElementById("editor");
+    if (!editor.contains(e.target)) {
+        saveActiveLineIfAny();
+    }
+});
