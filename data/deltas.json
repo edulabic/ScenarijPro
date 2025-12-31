@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": null,
+    "content": "Ovo je tekst koji ima vise od dvadeset rijeci kako bismo provjerili da li server pravilno prelama liniju teksta na vise dijelova bez greske",
+    "timestamp": 1767144681
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 1,
+    "nextLineId": 2,
+    "content": "",
+    "timestamp": 1767145095
+  }
+]

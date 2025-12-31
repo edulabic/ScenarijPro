@@ -4,8 +4,12 @@
   "content": [
     {
       "lineId": 1,
-      "nextLineId": null,
-      "text": ""
+      "nextLineId": 2
+    },
+    {
+      "lineId": 2,
+      "text": "vise dijelova bez greske",
+      "nextLineId": null
     }
   ]
 }

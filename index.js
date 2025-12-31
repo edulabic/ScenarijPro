@@ -85,3 +85,110 @@ app.post('/api/scenarios/:scenarioId/lines/:lineId/lock', (req, res) => {
 
     res.status(200).json({ message: "Linija je uspjesno zakljucana!" });
 });
+
+function wrapText(text) {
+    const words = text.split(/\s+/).filter(w => w.length > 0);
+    const lines = [];
+
+    for (let i = 0; i < words.length; i += 20) {
+        lines.push(words.slice(i, i + 20).join(" "));
+    }
+
+    return lines;
+}
+
+
+app.put('/api/scenarios/:scenarioId/lines/:lineId', (req, res) => {
+    const scenarioId = parseInt(req.params.scenarioId);
+    const lineId = parseInt(req.params.lineId);
+    const { userId, newText } = req.body;
+
+    if (!Array.isArray(newText) || newText.length === 0) {
+        return res.status(400).json({
+            message: "Niz new_text ne smije biti prazan!"
+        });
+    }
+
+    const scenarioPath = `./data/scenarios/scenario-${scenarioId}.json`;
+
+    if (!fs.existsSync(scenarioPath)) {
+        return res.status(404).json({
+            message: "Scenario ne postoji!"
+        });
+    }
+
+    const scenario = readJSON(scenarioPath);
+
+    const lineIndex = scenario.content.findIndex(l => l.lineId === lineId);
+    if (lineIndex === -1) {
+        return res.status(404).json({
+            message: "Linija ne postoji!"
+        });
+    }
+    const lock = locks.find(
+        l => l.scenarioId === scenarioId && l.lineId === lineId
+    );
+
+    if (!lock) {
+        return res.status(409).json({
+            message: "Linija nije zakljucana!"
+        });
+    }
+
+    if (lock.userId !== userId) {
+        return res.status(409).json({
+            message: "Linija je vec zakljucana!"
+        });
+    }
+
+    const line = scenario.content[lineIndex];
+    const oldNextLineId = line.nextLineId;
+
+    let wrappedLines = [];
+    newText.forEach(text => {
+        wrappedLines.push(...wrapText(text));
+    });
+
+    line.text = wrappedLines[0];
+
+    let maxLineId = Math.max(...scenario.content.map(l => l.lineId));
+    let previousLine = line;
+
+    for (let i = 1; i < wrappedLines.length; i++) {
+        maxLineId++;
+
+        const newLine = {
+            lineId: maxLineId,
+            text: wrappedLines[i],
+            nextLineId: null
+        };
+
+        previousLine.nextLineId = newLine.lineId;
+        scenario.content.splice(lineIndex + i, 0, newLine);
+        previousLine = newLine;
+    }
+
+    previousLine.nextLineId = oldNextLineId;
+
+    const deltas = readJSON('./data/deltas.json');
+    deltas.push({
+        scenarioId,
+        type: "line_update",
+        lineId,
+        nextLineId: previousLine.nextLineId,
+        content: wrappedLines.join(" "),
+        timestamp: Math.floor(Date.now() / 1000)
+    });
+
+    locks = locks.filter(
+        l => !(l.scenarioId === scenarioId && l.lineId === lineId)
+    );
+
+    writeJSON(scenarioPath, scenario);
+    writeJSON('./data/deltas.json', deltas);
+
+    res.status(200).json({
+        message: "Linija je uspjesno azurirana!"
+    });
+});
+
