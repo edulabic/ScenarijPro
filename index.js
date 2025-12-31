@@ -192,3 +192,39 @@ app.put('/api/scenarios/:scenarioId/lines/:lineId', (req, res) => {
     });
 });
 
+app.post('/api/scenarios/:scenarioId/characters/lock', (req, res) => {
+    const scenarioId = parseInt(req.params.scenarioId);
+    const { userId, characterName } = req.body;
+
+    const scenarioPath = `./data/scenarios/scenario-${scenarioId}.json`;
+    if (!fs.existsSync(scenarioPath)) {
+        return res.status(404).json({
+            message: "Scenario ne postoji!"
+        });
+    }
+
+    const existingLock = locks.find(
+        l =>
+            l.type === "character" &&
+            l.scenarioId === scenarioId &&
+            l.characterName === characterName
+    );
+
+    if (existingLock) {
+        return res.status(409).json({
+            message: "Konflikt! Ime lika je vec zakljucano!"
+        });
+    }
+
+    locks.push({
+        type: "character",
+        scenarioId,
+        characterName,
+        userId
+    });
+
+    res.status(200).json({
+        message: "Ime lika je uspjesno zakljucano!"
+    });
+});
+
