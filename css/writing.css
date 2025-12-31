@@ -330,3 +330,34 @@ body {
         padding: 10px 15px;
     }
 }
+
+.active-line {
+    background-color: #eef6ff;
+    border-left: 3px solid #4a90e2;
+}
+
+
+#promjena {
+    padding: 15px 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    background-color: white;
+}
+
+#promjena button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #e8e8e8;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    transition: background-color 0.15s;
+}
+
+#promjena button:hover {
+    background-color: #f0f0f0;
+}

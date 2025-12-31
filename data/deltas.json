@@ -60,5 +60,12 @@
     "oldName": "ALICE",
     "newName": "ALICIA",
     "timestamp": 1767188359
+  },
+  {
+    "scenarioId": 1,
+    "type": "char_rename",
+    "oldName": "LALICA",
+    "newName": "LALA",
+    "timestamp": 1767191661
   }
 ]

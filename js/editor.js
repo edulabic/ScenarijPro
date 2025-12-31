@@ -1,6 +1,8 @@
 let div = document.getElementById("editor");
 let editor = EditorTeksta(div);
 div.setAttribute('contenteditable', 'true');
+let lastTimestamp = 0;
+const SCENARIO_ID = 1;
 
 function prikaziPoruku(tekst) {
     let porukeDiv = document.getElementById("poruke");
@@ -112,4 +114,219 @@ document.getElementById("grupisiUlogeBtn").addEventListener("click", function() 
     });
     
     document.getElementById("poruke").innerHTML = html;
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const SCENARIO_ID = 1;
+
+    PoziviAjaxFetch.getScenario(SCENARIO_ID, (status, data) => {
+        if (status !== 200) {
+            console.error("Greška pri učitavanju scenarija");
+            return;
+        }
+
+        renderScenario(data);
+    });
+});
+
+function renderScenario(scenario) {
+    const editor = document.getElementById("editor");
+    editor.innerHTML = "";
+
+    scenario.content.forEach(line => {
+        const div = document.createElement("div");
+        div.className = "line";
+        div.textContent = line.text;
+        div.dataset.lineId = line.lineId;
+        div.contentEditable = true;
+
+        div.addEventListener("click", () => {
+            document.querySelectorAll(".line").forEach(l => l.classList.remove("active-line"));
+            div.classList.add("active-line");
+
+            lockLine(div.dataset.lineId);
+        });
+
+        div.addEventListener("focus", () => {
+            lockLine(div.dataset.lineId);
+        });
+
+       let originalText = line.text;
+
+div.addEventListener("blur", () => {
+    if (div.textContent !== originalText) {
+        updateLine(div.dataset.lineId, div.textContent);
+        originalText = div.textContent;
+    }
+});
+
+        editor.appendChild(div);
+    });
+}
+
+function lockLine(lineId) {
+    const USER_ID = 1;
+    const SCENARIO_ID = 1;
+    const poruke = document.getElementById("poruke");
+
+    PoziviAjaxFetch.lockLine(
+        SCENARIO_ID,
+        parseInt(lineId),
+        USER_ID,
+        (status, data) => {
+            if (status === 200) {
+                poruke.textContent = `Linija ${lineId} zaključana`;
+            } 
+            else if (status === 409) {
+                poruke.textContent = `Linija ${lineId} je već zaključana`;
+            } 
+            else {
+                poruke.textContent = data?.message || "Greška";
+            }
+        }
+    );
+}
+
+
+function updateLine(lineId, text) {
+    const USER_ID = 1;
+    const SCENARIO_ID = 1;
+
+    PoziviAjaxFetch.updateLine(
+        SCENARIO_ID,
+        parseInt(lineId),
+        USER_ID,
+        [text], 
+        (status, data) => {
+            if (status !== 200) {
+                alert(data?.message || "Greška pri snimanju");
+            }
+        }
+    );
+}
+
+function startDeltaPolling() {
+    setInterval(() => {
+        PoziviAjaxFetch.getDeltas(
+            SCENARIO_ID,
+            lastTimestamp,
+            (status, data) => {
+                if (status !== 200 || !data || !data.deltas) return;
+
+                data.deltas.forEach(delta => {
+                    lastTimestamp = Math.max(lastTimestamp, delta.timestamp);
+
+                    if (delta.type === "line_update") {
+                        applyLineUpdate(delta);
+                    }
+
+                    if (delta.type === "char_rename") {
+                        applyCharacterRename(delta);
+                    }
+                });
+            }
+        );
+    }, 3000);
+}
+
+function applyLineUpdate(delta) {
+    const editor = document.getElementById("editor");
+    const lines = editor.querySelectorAll(".line");
+
+    lines.forEach(line => {
+        if (parseInt(line.dataset.lineId) === delta.lineId) {
+            line.textContent = delta.content;
+        }
+    });
+}
+
+function applyCharacterRename(delta) {
+    const editor = document.getElementById("editor");
+
+    editor.querySelectorAll(".line").forEach(line => {
+        line.textContent = line.textContent.replaceAll(
+            delta.oldName,
+            delta.newName
+        );
+    });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    PoziviAjaxFetch.getScenario(SCENARIO_ID, (status, data) => {
+        if (status !== 200) return;
+
+        renderScenario(data);
+        startDeltaPolling(); 
+    });
+});
+
+document.getElementById("renameCharacterBtn").addEventListener("click", () => {
+    const oldName = document.getElementById("oldCharacterName").value;
+    const newName = document.getElementById("newCharacterName").value;
+
+    if (!oldName || !newName) {
+        alert("Unesi oba imena");
+        return;
+    }
+
+    PoziviAjaxFetch.updateCharacter(
+        1,        
+        1,        
+        oldName,
+        newName,
+        (status, data) => {
+            if (status === 200) {
+                document.getElementById("poruke").textContent =
+                    `Lik '${oldName}' preimenovan u '${newName}'`;
+            } else {
+                alert(data?.message || "Greška pri promjeni imena");
+            }
+        }
+    );
+});
+
+let lastDelta = 0;
+
+setInterval(() => {
+    PoziviAjaxFetch.getDeltas(1, lastDelta, (status, data) => {
+        if (status === 200 && data?.deltas?.length > 0) {
+            data.deltas.forEach(delta => {
+                applyDelta(delta);
+                lastDelta = Math.max(lastDelta, delta.timestamp);
+            });
+        }
+    });
+}, 3000);
+
+function applyDelta(delta) {
+    if (delta.type === "updateLine") {
+        const lineDiv = document.querySelector(
+            `[data-line-id="${delta.lineId}"]`
+        );
+        if (lineDiv) {
+            lineDiv.textContent = delta.newText;
+        }
+    }
+}
+document.getElementById("lockCharacterBtn").addEventListener("click", () => {
+    const characterName = document.getElementById("characterName").value;
+
+    if (!characterName) {
+        alert("Unesi ime lika");
+        return;
+    }
+
+    PoziviAjaxFetch.lockCharacter(
+        1, 
+        characterName,
+        1, 
+        (status, data) => {
+            if (status === 200) {
+                document.getElementById("poruke").textContent =
+                    `Lik "${characterName}" zaključan`;
+            } else {
+                alert(data?.message || "Greška");
+            }
+        }
+    );
 });
