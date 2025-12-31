@@ -1,14 +1,30 @@
 {
   "id": 1,
-  "title": "Prvi scenarij",
+  "title": "Prvi scenario za testiranje",
   "content": [
     {
       "lineId": 1,
-      "nextLineId": 2
+      "nextLineId": 2,
+      "text": "Planiranje svakog novog dana donosi nam priliku za napredak i ostvarenje postavljenih ciljeva. Kada fokusirano radimo na svojim snovima, prepreke"
     },
     {
       "lineId": 2,
-      "text": "vise dijelova bez greske",
+      "text": "postaju samo stepenice ka uspjehu. Važno je ostati dosljedan, učiti iz grešaka i uvijek vjerovati u vlastite sposobnosti, jer trud",
+      "nextLineId": 3
+    },
+    {
+      "lineId": 3,
+      "text": "LALICA je glavna junakinja djela",
+      "nextLineId": 4
+    },
+    {
+      "lineId": 4,
+      "text": "Druga nova linija.",
+      "nextLineId": 5
+    },
+    {
+      "lineId": 5,
+      "text": "Treća nova linija.",
       "nextLineId": null
     }
   ]

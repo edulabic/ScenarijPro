@@ -4,22 +4,38 @@
     "type": "line_update",
     "lineId": 1,
     "nextLineId": null,
-    "content": "Ovo je tekst koji ima vise od dvadeset rijeci kako bismo provjerili da li server pravilno prelama liniju teksta na vise dijelova bez greske",
-    "timestamp": 1767144681
+    "content": "Ovo je prrva i kratka rečenica.",
+    "timestamp": 1767147891
   },
   {
     "scenarioId": 1,
     "type": "line_update",
     "lineId": 1,
-    "nextLineId": 2,
-    "content": "",
-    "timestamp": 1767145095
+    "nextLineId": null,
+    "content": "Planiranje svakog novog dana donosi nam priliku za napredak i ostvarenje postavljenih ciljeva. Kada fokusirano radimo na svojim snovima, prepreke postaju samo stepenice ka uspjehu. Važno je ostati dosljedan, učiti iz grešaka i uvijek vjerovati u vlastite sposobnosti, jer trud se na kraju uvijek isplati svima.",
+    "timestamp": 1767148020
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 3,
+    "nextLineId": null,
+    "content": "Prva nova linija. Druga nova linija. Treća nova linija.",
+    "timestamp": 1767148115
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 3,
+    "nextLineId": 4,
+    "content": "LALA je glavna junakinja djela",
+    "timestamp": 1767148273
   },
   {
     "scenarioId": 1,
     "type": "char_rename",
-    "oldName": "ALICE",
-    "newName": "ALICIA",
-    "timestamp": 1767146445
+    "oldName": "LALA",
+    "newName": "LALICA",
+    "timestamp": 1767148502
   }
 ]

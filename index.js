@@ -279,3 +279,44 @@ app.post('/api/scenarios/:scenarioId/characters/update', (req, res) => {
         message: "Ime lika je uspjesno promijenjeno!"
     });
 });
+
+app.get('/api/scenarios/:scenarioId/deltas', (req, res) => {
+    const scenarioId = parseInt(req.params.scenarioId);
+    const since = parseInt(req.query.since) || 0;
+
+    const scenarioPath = `./data/scenarios/scenario-${scenarioId}.json`;
+
+    if (!fs.existsSync(scenarioPath)) {
+        return res.status(404).json({
+            message: "Scenario ne postoji!"
+        });
+    }
+
+    const deltas = readJSON('./data/deltas.json');
+
+    const filteredDeltas = deltas
+        .filter(d =>
+            d.scenarioId === scenarioId &&
+            d.timestamp > since
+        )
+        .sort((a, b) => a.timestamp - b.timestamp);
+
+    res.status(200).json({
+        deltas: filteredDeltas
+    });
+});
+
+app.get('/api/scenarios/:scenarioId', (req, res) => {
+    const scenarioId = parseInt(req.params.scenarioId);
+    const path = `./data/scenarios/scenario-${scenarioId}.json`;
+
+    if (!fs.existsSync(path)) {
+        return res.status(404).json({
+            message: "Scenario ne postoji!"
+        });
+    }
+    const scenario = readJSON(path);
+    res.status(200).json(scenario);
+});
+
+
