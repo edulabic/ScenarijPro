@@ -1,26 +1,46 @@
 {
   "id": 1,
-  "title": "Prvi scenario za testiranje",
+  "title": "Potraga za izgubljenim ključem",
   "content": [
     {
       "lineId": 1,
       "nextLineId": 2,
-      "text": "Ovo je test linije sa vise od dvadeset rijeci da vidimo da li prelamanje radi kako treba i da se prelomi sve na ispravan nacin onako kako je zadano u spirali"
+      "text": "NARATOR: Sunce je polako zalazilo nad starim gradom."
+    },
+    {
+      "lineId": 2,
+      "nextLineId": 3,
+      "text": "ALICIA: Jesi li siguran da je ključ ostao u biblioteci?"
     },
     {
       "lineId": 3,
-      "text": "LALICA je glavna junakinja djela romana o kojem pricamo.",
+      "nextLineId": 7,
+      "text": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ"
+    },
+    {
+      "lineId": 7,
+      "text": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ",
+      "nextLineId": 8
+    },
+    {
+      "lineId": 8,
+      "text": "riječ riječ riječ riječ riječ",
       "nextLineId": 4
     },
     {
       "lineId": 4,
-      "text": "Druga nova linija.",
-      "nextLineId": 5
+      "nextLineId": 5,
+      "text": "ALICIA: Moramo požuriti prije nego što čuvar zaključa glavna vrata."
     },
     {
       "lineId": 5,
-      "text": "Treća nova linija.",
-      "nextLineId": null
+      "nextLineId": 6,
+      "text": "BOB: Čekaj, čuješ li taj zvuk iza polica?"
+    },
+    {
+      "lineId": 6,
+      "nextLineId": null,
+      "text": "NARATOR: Iz sjene se polako pojavila nepoznata figura."
     }
   ]
 }

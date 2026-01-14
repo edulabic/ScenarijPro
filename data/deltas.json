@@ -3,112 +3,70 @@
     "scenarioId": 1,
     "type": "line_update",
     "lineId": 1,
-    "nextLineId": null,
-    "content": "Ovo je prrva i kratka rečenica.",
-    "timestamp": 1767147891
+    "nextLineId": 2,
+    "content": "NARATOR: Sunce je polako zalazilo nad starim gradom.",
+    "timestamp": 1736520000
   },
   {
     "scenarioId": 1,
     "type": "line_update",
-    "lineId": 1,
-    "nextLineId": null,
-    "content": "Planiranje svakog novog dana donosi nam priliku za napredak i ostvarenje postavljenih ciljeva. Kada fokusirano radimo na svojim snovima, prepreke postaju samo stepenice ka uspjehu. Važno je ostati dosljedan, učiti iz grešaka i uvijek vjerovati u vlastite sposobnosti, jer trud se na kraju uvijek isplati svima.",
-    "timestamp": 1767148020
-  },
-  {
-    "scenarioId": 1,
-    "type": "line_update",
-    "lineId": 3,
-    "nextLineId": null,
-    "content": "Prva nova linija. Druga nova linija. Treća nova linija.",
-    "timestamp": 1767148115
+    "lineId": 2,
+    "nextLineId": 3,
+    "content": "ALICE: Jesi li siguran da je ključ ostao u biblioteci?",
+    "timestamp": 1736520010
   },
   {
     "scenarioId": 1,
     "type": "line_update",
     "lineId": 3,
     "nextLineId": 4,
-    "content": "LALA je glavna junakinja djela",
-    "timestamp": 1767148273
+    "content": "BOB: To je posljednje mjesto gdje sam ga vidio prije nego što je pala noć.",
+    "timestamp": 1736520020
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 4,
+    "nextLineId": 5,
+    "content": "ALICE: Moramo požuriti prije nego što čuvar zaključa glavna vrata.",
+    "timestamp": 1736520030
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 5,
+    "nextLineId": 6,
+    "content": "BOB: Čekaj, čuješ li taj zvuk iza polica?",
+    "timestamp": 1736520040
+  },
+  {
+    "scenarioId": 1,
+    "type": "line_update",
+    "lineId": 6,
+    "nextLineId": null,
+    "content": "NARATOR: Iz sjene se polako pojavila nepoznata figura.",
+    "timestamp": 1736520050
   },
   {
     "scenarioId": 1,
     "type": "char_rename",
-    "oldName": "LALA",
-    "newName": "LALICA",
-    "timestamp": 1767148502
+    "oldName": "BOB",
+    "newName": "ROBERT",
+    "timestamp": 1736520100
   },
   {
     "scenarioId": 1,
     "type": "line_update",
-    "lineId": 1,
-    "nextLineId": 2,
-    "content": "Ovo je test linije sa vise od dvadeset rijeci da vidimo da li prelamanje radi kako treba",
-    "timestamp": 1767183480
-  },
-  {
-    "scenarioId": 1,
-    "type": "line_update",
-    "lineId": 1,
-    "nextLineId": 2,
-    "content": "Ovo je test linije sa vise od dvadeset rijeci da vidimo da li prelamanje radi kako treba",
-    "timestamp": 1767183567
+    "lineId": 3,
+    "nextLineId": 4,
+    "content": "riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ riječ",
+    "timestamp": 1768357048
   },
   {
     "scenarioId": 1,
     "type": "char_rename",
     "oldName": "ALICE",
     "newName": "ALICIA",
-    "timestamp": 1767188359
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "LALICA",
-    "newName": "LALA",
-    "timestamp": 1767191661
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "LALA",
-    "newName": "LALA MALA",
-    "timestamp": 1767193670
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "LALA MALA",
-    "newName": "LALICA",
-    "timestamp": 1767193705
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "LALICA",
-    "newName": "LALA",
-    "timestamp": 1767194624
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "DADA",
-    "newName": "SENADA",
-    "timestamp": 1767197283
-  },
-  {
-    "scenarioId": 1,
-    "type": "char_rename",
-    "oldName": "LALA",
-    "newName": "LALICA",
-    "timestamp": 1767197874
-  },
-  {
-    "scenarioId": 1,
-    "type": "line_update",
-    "lineId": 3,
-    "nextLineId": 4,
-    "content": "LALICA je glavna junakinja djela romana o kojem pricamo.",
-    "timestamp": 1767199760
+    "timestamp": 1768357048
   }
 ]
