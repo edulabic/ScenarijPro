@@ -126,7 +126,7 @@ function renderScenario(scenario) {
         div.className = "line";
         div.textContent = line.text;
         div.dataset.lineId = line.lineId;
-        div.dataset.originalText = line.text;   // 👈 DODANO
+        div.dataset.originalText = line.text;  
         div.contentEditable = true;
 
         div.addEventListener("click", () => {
