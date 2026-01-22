@@ -1,12 +1,159 @@
+const path = require("path");
+
 const sequelize = require("./baza");   
-const { Scenario, Line, Delta } = require("./models/index.js");
+const { Scenario, Line, Delta, Checkpoint } = require("./models/index.js");
 
 const express = require("express");
 const app = express();
 
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, 'html')));
+app.use(express.static(__dirname));
+async function initializeTestData() {
+  try {
+    // Prvo obriši sve postojeće podatke (za slučaj da sync nije obrisao)
+    await Delta.destroy({ where: {} });
+    await Line.destroy({ where: {} });
+    await Checkpoint.destroy({ where: {} });
+    await Scenario.destroy({ where: {} });
+
+    // Kreiraj scenario - bez eksplicitnog id-a, neka Sequelize koristi auto-increment
+    const scenario = await Scenario.create({ 
+      title: 'Potraga za izgubljenim ključem' 
+    });
+    
+    // Koristi scenario.id umjesto hardkodiranog 1
+    const scenarioId = scenario.id;
+    
+    // Kreiraj sve linije
+    const lines = [
+      {
+        lineId: 1,
+        nextLineId: 2,
+        text: "NARATOR: Sunce je polako zalazilo nad starim gradom."
+      },
+      {
+        lineId: 2,
+        nextLineId: 3,
+        text: "ALICE: Jesi li siguran da je ključ ostao u biblioteci?"
+      },
+      {
+        lineId: 3,
+        nextLineId: 4,
+        text: "BOB: To je posljednje mjesto gdje sam ga vidio prije nego što je pala noć."
+      },
+      {
+        lineId: 4,
+        nextLineId: 5,
+        text: "ALICE: Moramo požuriti prije nego što čuvar zaključa glavna vrata."
+      },
+      {
+        lineId: 5,
+        nextLineId: 6,
+        text: "BOB: Čekaj, čuješ li taj zvuk iza polica?"
+      },
+      {
+        lineId: 6,
+        nextLineId: null,
+        text: "NARATOR: Iz sjene se polako pojavila nepoznata figura."
+      }
+    ];
+
+    for (const line of lines) {
+      await Line.create({
+        scenarioId: scenarioId,
+        lineId: line.lineId,
+        nextLineId: line.nextLineId,
+        text: line.text
+      });
+    }
+
+    // Kreiraj sve deltas
+    const deltas = [
+      {
+        scenarioId: scenarioId,
+        type: "line_update",
+        lineId: 1,
+        nextLineId: 2,
+        content: "NARATOR: Sunce je polako zalazilo nad starim gradom.",
+        timestamp: 1736520000
+      },
+      {
+        scenarioId: scenarioId,
+        type: "line_update",
+        lineId: 2,
+        nextLineId: 3,
+        content: "ALICE: Jesi li siguran da je ključ ostao u biblioteci?",
+        timestamp: 1736520010
+      },
+      {
+        scenarioId: scenarioId,
+        type: "line_update",
+        lineId: 3,
+        nextLineId: 4,
+        content: "BOB: To je posljednje mjesto gdje sam ga vidio prije nego što je pala noć.",
+        timestamp: 1736520020
+      },
+      {
+        scenarioId: scenarioId,
+        type: "line_update",
+        lineId: 4,
+        nextLineId: 5,
+        content: "ALICE: Moramo požuriti prije nego što čuvar zaključa glavna vrata.",
+        timestamp: 1736520030
+      },
+      {
+        scenarioId: scenarioId,
+        type: "line_update",
+        lineId: 5,
+        nextLineId: 6,
+        content: "BOB: Čekaj, čuješ li taj zvuk iza polica?",
+        timestamp: 1736520040
+      },
+      {
+        scenarioId: scenarioId,
+        type: "line_update",
+        lineId: 6,
+        nextLineId: null,
+        content: "NARATOR: Iz sjene se polako pojavila nepoznata figura.",
+        timestamp: 1736520050
+      },
+      {
+        scenarioId: scenarioId,
+        type: "char_rename",
+        oldName: "BOB",
+        newName: "ROBERT",
+        timestamp: 1736520100
+      }
+    ];
+
+    for (const delta of deltas) {
+      await Delta.create(delta);
+    }
+    
+    console.log(`Test data initialized successfully with scenario ID: ${scenarioId}`);
+  } catch (err) {
+    console.error("Error initializing test data:", err);
+  }
+}
+
+// Ispravljena inicijalizacija da ne pokreće server dva puta
 sequelize.sync({ force: true })
+  .then(async () => {
+    await initializeTestData();
+    app.listen(3000, () => {
+      console.log("Server running on http://localhost:3000");
+    });
+  })
+  .catch(err => {
+    console.error("GRESKA PRIJE SYNC:", err);
+  });
+
+sequelize.sync({ force: true })
+  .then(() => {
+    return initializeTestData();
+  })
   .then(() => {
     app.listen(3000, () => {
       console.log("Server running on http://localhost:3000");
@@ -16,6 +163,20 @@ sequelize.sync({ force: true })
     console.error("GRESKA PRIJE SYNC:", err);
   });
 
+
+
+sequelize.sync({ force: true })
+  .then(() => {
+    return initializeTestData();
+  })
+  .then(() => {
+    app.listen(3000, () => {
+      console.log("Server running on http://localhost:3000");
+    });
+  })
+  .catch(err => {
+    console.error("GRESKA PRIJE SYNC:", err);
+  });
 let locks = [];
 
 function wrapText(text) {
@@ -91,7 +252,9 @@ app.post('/api/scenarios/:scenarioId/lines/:lineId/lock', async (req, res) => {
       return res.status(409).json({ message: "Linija je vec zakljucana!" });
     }
 
-    locks = locks.filter(l => l.userId !== userId);
+    // GLOBALNO ZAKLJUČAVANJE: Otključaj SVE linije ovog korisnika u ovom scenariju
+    locks = locks.filter(l => !(l.scenarioId === scenarioId && l.userId === userId && !l.type));
+    
     locks.push({ scenarioId, lineId, userId });
 
     res.status(200).json({ message: "Linija je uspjesno zakljucana!" });
@@ -275,6 +438,8 @@ app.post('/api/scenarios/:scenarioId/characters/update', async (req, res) => {
     const lines = await Line.findAll({
       where: { scenarioId }
     });
+    
+    // CASE-SENSITIVE regex - bez 'i' flaga
     const regex = new RegExp(`\\b${oldName}\\b`, 'g');
     for (const line of lines) {
       if (typeof line.text === "string") {
@@ -373,5 +538,128 @@ app.get('/api/scenarios/:scenarioId', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Greška pri dohvatanju scenarija!" });
+  }
+});
+
+app.post('/api/scenarios/:scenarioId/checkpoint', async (req, res) => {
+  try {
+    const scenarioId = parseInt(req.params.scenarioId);
+
+    const scenario = await Scenario.findByPk(scenarioId);
+    if (!scenario) {
+      return res.status(404).json({
+        message: "Scenario ne postoji!"
+      });
+    }
+
+    await Checkpoint.create({
+      scenarioId,
+      timestamp: Math.floor(Date.now() / 1000)
+    });
+
+    res.status(200).json({
+      message: "Checkpoint je uspjesno kreiran!"
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Greška pri kreiranju checkpointa!" });
+  }
+});
+
+app.get('/api/scenarios/:scenarioId/checkpoints', async (req, res) => {
+  try {
+    const scenarioId = parseInt(req.params.scenarioId);
+
+    const scenario = await Scenario.findByPk(scenarioId);
+    if (!scenario) {
+      return res.status(404).json({
+        message: "Scenario ne postoji!"
+      });
+    }
+
+    const checkpoints = await Checkpoint.findAll({
+      where: { scenarioId },
+      order: [['timestamp', 'ASC']]
+    });
+
+    const response = checkpoints.map(c => ({
+      id: c.id,
+      timestamp: c.timestamp
+    }));
+
+    res.status(200).json(response);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Greška pri dohvatanju checkpointa!" });
+  }
+});
+
+app.get('/api/scenarios/:scenarioId/restore/:checkpointId', async (req, res) => {
+  try {
+    const scenarioId = parseInt(req.params.scenarioId);
+    const checkpointId = parseInt(req.params.checkpointId);
+
+    const checkpoint = await Checkpoint.findByPk(checkpointId);
+    if (!checkpoint || checkpoint.scenarioId !== scenarioId) {
+      return res.status(404).json({
+        message: "Checkpoint ne postoji!"
+      });
+    }
+
+    const scenario = await Scenario.findByPk(scenarioId);
+    if (!scenario) {
+      return res.status(404).json({
+        message: "Scenario ne postoji!"
+      });
+    }
+
+    let lines = await Line.findAll({
+      where: { scenarioId },
+      order: [['lineId', 'ASC']]
+    });
+
+    let content = lines.map(l => ({
+      lineId: l.lineId,
+      nextLineId: l.nextLineId,
+      text: l.text
+    }));
+
+    const deltas = await Delta.findAll({
+      where: {
+        scenarioId,
+        timestamp: {
+          [require('sequelize').Op.lte]: checkpoint.timestamp
+        }
+      },
+      order: [['timestamp', 'ASC']]
+    });
+
+    for (const d of deltas) {
+      if (d.type === "line_update") {
+        const line = content.find(l => l.lineId === d.lineId);
+        if (line) {
+          line.text = d.content;
+          line.nextLineId = d.nextLineId;
+        }
+      }
+
+      if (d.type === "char_rename") {
+        content.forEach(l => {
+          if (typeof l.text === "string") {
+            const regex = new RegExp(`\\b${d.oldName}\\b`, 'g');
+            l.text = l.text.replace(regex, d.newName);
+          }
+        });
+      }
+    }
+
+    res.status(200).json({
+      id: scenario.id,
+      title: scenario.title,
+      content
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Greška pri restore operaciji!" });
   }
 });

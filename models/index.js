@@ -1,11 +1,13 @@
-console.log("MODELS LOADED");
-
 const Scenario = require("./Scenario");
 const Line = require("./Line");
 const Delta = require("./Delta");
 const Checkpoint = require("./Checkpoint");
 
-Scenario.hasMany(Line, { foreignKey: "scenarioId" });
+Scenario.hasMany(Line, { 
+  foreignKey: "scenarioId", 
+  as: "content"  
+});
+
 Line.belongsTo(Scenario, { foreignKey: "scenarioId" });
 
 Scenario.hasMany(Delta, { foreignKey: "scenarioId" });
@@ -20,5 +22,3 @@ module.exports = {
   Delta,
   Checkpoint
 };
-
-console.log("REGISTERED MODELS:", Object.keys(require("../baza").models));

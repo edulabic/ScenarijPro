@@ -1,5 +1,3 @@
-console.log("Checkpoint model loaded");
-
 const { DataTypes } = require("sequelize");
 const sequelize = require("../baza");
 
