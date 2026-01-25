@@ -124,7 +124,7 @@ function renderScenario(scenario) {
     scenario.content.forEach(line => {
         const div = document.createElement("div");
         div.className = "line";
-        div.textContent = line.text;
+        div.textContent = line.text === "" ? "\u00A0" : line.text;
         div.dataset.lineId = line.lineId;
         div.dataset.originalText = line.text;  
         div.contentEditable = true;
@@ -138,7 +138,7 @@ function renderScenario(scenario) {
         });
 
         div.addEventListener("blur", () => {
-            if (div.textContent !== div.dataset.originalText) {
+            if (div.textContent.trim() !== div.dataset.originalText.trim()) {
                 updateLine(div.dataset.lineId, div.textContent);
                 div.dataset.originalText = div.textContent;
             }

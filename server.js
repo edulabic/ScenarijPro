@@ -10,23 +10,21 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'html')));
 app.use(express.static(__dirname));
+
 async function initializeTestData() {
   try {
-    // Prvo obriši sve postojeće podatke (za slučaj da sync nije obrisao)
+   
     await Delta.destroy({ where: {} });
     await Line.destroy({ where: {} });
     await Checkpoint.destroy({ where: {} });
     await Scenario.destroy({ where: {} });
 
-    // Kreiraj scenario - bez eksplicitnog id-a, neka Sequelize koristi auto-increment
     const scenario = await Scenario.create({ 
       title: 'Potraga za izgubljenim ključem' 
     });
     
-    // Koristi scenario.id umjesto hardkodiranog 1
     const scenarioId = scenario.id;
     
-    // Kreiraj sve linije
     const lines = [
       {
         lineId: 1,
@@ -69,7 +67,6 @@ async function initializeTestData() {
       });
     }
 
-    // Kreiraj sve deltas
     const deltas = [
       {
         scenarioId: scenarioId,
@@ -134,11 +131,10 @@ async function initializeTestData() {
     
     console.log(`Test data initialized successfully with scenario ID: ${scenarioId}`);
   } catch (err) {
-    console.error("Error initializing test data:", err);
+    console.error("Error pri inicijalizaciji:", err);
   }
 }
 
-// Ispravljena inicijalizacija da ne pokreće server dva puta
 sequelize.sync({ force: true })
   .then(async () => {
     await initializeTestData();
@@ -147,36 +143,10 @@ sequelize.sync({ force: true })
     });
   })
   .catch(err => {
-    console.error("GRESKA PRIJE SYNC:", err);
-  });
-
-sequelize.sync({ force: true })
-  .then(() => {
-    return initializeTestData();
-  })
-  .then(() => {
-    app.listen(3000, () => {
-      console.log("Server running on http://localhost:3000");
-    });
-  })
-  .catch(err => {
-    console.error("GRESKA PRIJE SYNC:", err);
+    console.error("Greska prije sync:", err);
   });
 
 
-
-sequelize.sync({ force: true })
-  .then(() => {
-    return initializeTestData();
-  })
-  .then(() => {
-    app.listen(3000, () => {
-      console.log("Server running on http://localhost:3000");
-    });
-  })
-  .catch(err => {
-    console.error("GRESKA PRIJE SYNC:", err);
-  });
 let locks = [];
 
 function wrapText(text) {
